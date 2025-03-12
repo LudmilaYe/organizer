@@ -35,12 +35,14 @@ const directiongSchema = new mongoose.Schema({
   admins: [
     {
       type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
   ],
 
   members: [
     {
       type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
   ],
 });

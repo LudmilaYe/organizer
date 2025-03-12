@@ -3,41 +3,63 @@ import mongoose from "mongoose";
 const userSchema = new mongoose.Schema({
   fullName: {
     type: String,
-    required: true,
+    require: true,
     minlength: 2,
     maxlength: 100,
   },
 
   email: {
     type: String,
-    required: true,
+    require: true,
     unique: true,
   },
 
   password: {
     type: String,
-    required: true,
+    require: true,
     minlength: 8,
+  },
+
+  group: {
+    type: String,
+    default: "",
+  },
+
+  phone: {
+    type: String,
+    default: "",
+  },
+
+  birthdate: {
+    type: String,
+    default: "",
   },
 
   role: {
     type: "String",
-    required: true,
+    require: true,
     default: "Студент",
-    enum: ["Студент", "Организатор", "Руководитель в.о.", "Руководитель направления", "Администратор"]
+    enum: [
+      "Студент",
+      "Организатор",
+      "Руководитель в.о.",
+      "Руководитель направления",
+      "Администратор",
+    ],
   },
 
   directing: [
     {
       type: mongoose.Schema.Types.ObjectId,
-    }
+      ref: "Directing",
+    },
   ],
 
   events: [
     {
       type: mongoose.Schema.Types.ObjectId,
-    }
-  ]
+    },
+  ],
 });
 
 export default mongoose.model("User", userSchema);

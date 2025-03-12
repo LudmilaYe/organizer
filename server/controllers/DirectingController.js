@@ -60,3 +60,49 @@ export const getAllOrganizers = async (req, res) => {
     });
   }
 };
+
+export const getAllDirecting = async (req, res) => {
+  try {
+    const directing = await DirectingModel.find()
+      .populate("admins")
+      .populate("members")
+      .exec();
+
+    return res.status(200).send(directing);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "Не удалось получить направления",
+    });
+  }
+};
+
+export const getDirecting = async (req, res) => {
+  try {
+    const directind_id = req.params.id;
+    const getDirecting = await DirectingModel.findById(directind_id);
+
+    return res.status(200).send(getDirecting);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "Не удалось получить направление",
+    });
+  }
+};
+
+export const getAdminsDirecting = async (req, res) => {
+  try {
+    const userId = req.userId;
+
+    console.log(userId);
+
+    const directing = await DirectingModel.find({ admins: userId });
+    res.status(200).json(directing);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "Не удалось получить направления",
+    });
+  }
+};

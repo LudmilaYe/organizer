@@ -20,7 +20,7 @@ export const registerUser = async (req, res) => {
 
     if (userEmail) {
       return res.status(400).json({
-        message: "Пользователь уже существует с такой почтой"
+        message: "Пользователь уже существует с такой почтой",
       });
     }
 
@@ -28,7 +28,7 @@ export const registerUser = async (req, res) => {
 
     if (password.length < 8) {
       return res.status(401).json({
-        message: "Пароль должен быть не менее 8 символов"
+        message: "Пароль должен быть не менее 8 символов",
       });
     }
 
@@ -38,16 +38,12 @@ export const registerUser = async (req, res) => {
     const doc = new UserModel({
       fullName: req.body.fullName,
       email: req.body.email.toLowerCase(),
-      password: hashPassword
+      password: hashPassword,
     });
 
     const user = await doc.save();
 
-    const token = jwt.sign(
-      { _id: user._id },
-      SECRET,
-      { expiresIn: "30d" }
-    );
+    const token = jwt.sign({ _id: user._id }, SECRET, { expiresIn: "30d" });
 
     const userData = user._doc;
 
@@ -55,7 +51,48 @@ export const registerUser = async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(500).send({
-      message: "Не удалось зарегестрироваться"
+      message: "Не удалось зарегестрироваться",
+    });
+  }
+};
+
+/**
+ * @description Обновление пользователя
+ * @param {Object} req - Объект запроса
+ * @param {Object} res - Объект ответа
+ * @access private
+ * @method patch
+ */
+export const updateUser = async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.userId);
+
+    if (!user) {
+      return res.status(400).json({
+        message: "Пользователя не существует",
+      });
+    }
+
+    const { fullName, email, password, group, phone, birthdate } = req.body;
+
+    const updatedData = {
+      fullName: fullName || user.fullName,
+      email: email || user.email,
+      password: password || user.password,
+      group: group || user.group,
+      phone: phone || user.phone,
+      birthdate: birthdate || user.birthdate,
+    };
+
+    await UserModel.findByIdAndUpdate(req.userId, updatedData);
+
+    return res.status(200).json({
+      message: "Успешно!",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Не удалось обновить пользователя",
     });
   }
 };
@@ -69,11 +106,13 @@ export const registerUser = async (req, res) => {
  */
 export const loginUser = async (req, res) => {
   try {
-    const user = await UserModel.findOne({ email: req.body.email.toLowerCase() });
+    const user = await UserModel.findOne({
+      email: req.body.email.toLowerCase(),
+    });
 
     if (!user) {
       return res.status(400).json({
-        message: "Неправильный логин или пароль"
+        message: "Неправильный логин или пароль",
       });
     }
 
@@ -84,22 +123,18 @@ export const loginUser = async (req, res) => {
 
     if (!isValidPassword) {
       return res.status(400).json({
-        message: "Неверный логин или пароль"
+        message: "Неверный логин или пароль",
       });
     }
 
-    const token = jwt.sign(
-      { _id: user._id },
-      SECRET,
-      { expiresIn: "30d" }
-    );
+    const token = jwt.sign({ _id: user._id }, SECRET, { expiresIn: "30d" });
 
     const { password, ...userData } = user._doc;
 
     res.status(200).json({ ...userData, token });
   } catch (error) {
     res.status(400).json({
-      message: "Ошибка входа"
+      message: "Ошибка входа",
     });
   }
 };
@@ -117,7 +152,7 @@ export const getUser = async (req, res) => {
 
     if (!user) {
       return res.status(404).send({
-        message: "Пользователь не найден"
+        message: "Пользователь не найден",
       });
     }
 
@@ -126,7 +161,7 @@ export const getUser = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).send({
-      message: "Не удалось получить пользователя"
+      message: "Не удалось получить пользователя",
     });
   }
 };
