@@ -1,0 +1,47 @@
+.signin__wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+  gap: 20px;
+
+  h1 {
+    font-size: 48px;
+    font-family: "Montserrat-bd", sans-serif;
+    font-weight: 700;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 400px;
+
+    input {
+      padding: 10px;
+      width: 100%;
+      background: var(--color-white);
+      border: 1px solid rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  .signin__links {
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    a {
+      color: var(--color-blue);
+    }
+  }
+
+  button {
+    width: 400px;
+    padding: 15px;
+    border-radius: 5px;
+    background: var(--color-blue);
+    color: var(--color-white);
+  }
+}

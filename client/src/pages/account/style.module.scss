@@ -1,0 +1,21 @@
+.account {
+  margin-top: 20px;
+}
+
+.account__wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.account__links {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  margin-bottom: 40px;
+
+  a {
+    color: var(--color-blue);
+  }
+}

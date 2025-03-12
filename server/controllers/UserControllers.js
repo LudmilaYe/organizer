@@ -37,7 +37,7 @@ export const registerUser = async (req, res) => {
 
     const doc = new UserModel({
       fullName: req.body.fullName,
-      email: req.body.email,
+      email: req.body.email.toLowerCase(),
       password: hashPassword
     });
 
@@ -69,7 +69,7 @@ export const registerUser = async (req, res) => {
  */
 export const loginUser = async (req, res) => {
   try {
-    const user = await UserModel.findOne({ email: req.body.email });
+    const user = await UserModel.findOne({ email: req.body.email.toLowerCase() });
 
     if (!user) {
       return res.status(400).json({
