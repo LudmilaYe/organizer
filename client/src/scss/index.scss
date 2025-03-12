@@ -1,0 +1,82 @@
+@import "./reset";
+@import "./vars";
+@import "./fonts";
+
+/* BASIC SETTINGS */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+
+  overflow-x: hidden;
+
+  background: var(--color-white);
+  color: var(--color-black);
+
+  @media (max-height: 610px) {
+    overflow-x: hidden;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-block-start: 75px;
+}
+
+::-webkit-scrollbar {
+  background: var(--color-white);
+  width: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-blue);
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1260px;
+  padding: 0 10px;
+  margin: 0 auto;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+a,
+span {
+  color: inherit;
+  font-family: inherit;
+  line-height: 140%;
+}
+
+ul,
+li {
+  list-style-type: none;
+}
+
+input,
+textarea {
+  font-family: "Montserrat", sans-serif;
+  font-size: 14px;
+}
