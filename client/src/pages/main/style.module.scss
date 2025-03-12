@@ -1,0 +1,24 @@
+.main__list {
+  margin-top: 20px;
+
+  li {
+    width: 390px;
+
+    img {
+      width: 390px;
+      height: 260px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    .main__name {
+      padding: 5px;
+      background: var(--color-gray);
+      border-radius: 5px;
+      text-align: center;
+
+      font-size: 14px;
+      margin-top: 10px;
+    }
+  }
+}

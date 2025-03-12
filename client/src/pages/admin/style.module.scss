@@ -1,6 +1,10 @@
 .create_direction {
   margin-top: 40px;
   margin-bottom: 40px;
+
+  h1 {
+    margin-bottom: 20px;
+  }
 }
 
 .create_direction__images {
@@ -98,5 +102,15 @@
         color: var(--color-white);
       }
     }
+  }
+}
+
+.create_direction__wrapper {
+  & > button {
+    width: 100%;
+    margin-top: 40px;
+    background: var(--color-blue);
+    padding: 20px;
+    color: var(--color-white);
   }
 }

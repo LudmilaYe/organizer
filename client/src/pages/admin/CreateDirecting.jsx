@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import style from "./style.module.scss";
 import { useDropzone } from "react-dropzone";
 import axios from "../../utils/axios";
+import { useNavigate } from "react-router-dom";
 
 const CreateDirecting = () => {
   const [mainImagePath, setMainImagePath] = useState(null);
@@ -12,6 +13,8 @@ const CreateDirecting = () => {
   const [name, setName] = useState("");
   const [firstDescription, setFirstDescription] = useState("");
   const [secondDescription, setSecondDescription] = useState("");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getAllOrganizers = async () => {
@@ -47,6 +50,11 @@ const CreateDirecting = () => {
           secondImagePath: secondImagePath,
         }
       );
+
+      if (directing.status === 200) {
+        alert("Направление успешно создано!");
+        navigate("/");
+      }
     } catch (error) {
       console.log(error);
       alert(`Произошла ошибка: ${error.response.data.message}`);
@@ -188,6 +196,8 @@ const CreateDirecting = () => {
               )
             )}
           </div>
+
+          <button onClick={createDirecting}>Создать направление</button>
         </div>
       </div>
     </section>

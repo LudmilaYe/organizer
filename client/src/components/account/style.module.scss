@@ -1,0 +1,20 @@
+.admins_directing__wrapper {
+  ul {
+    margin-top: 20px;
+
+    li {
+      a {
+        display: block;
+        background: var(--color-white);
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+        padding: 20px;
+        border-radius: 10px;
+
+        p {
+          font-size: 14px;
+          margin-top: 5px;
+        }
+      }
+    }
+  }
+}

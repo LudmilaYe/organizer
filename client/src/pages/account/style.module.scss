@@ -4,7 +4,14 @@
 
 .account__wrapper {
   display: flex;
+  gap: 60px;
+}
+
+.account__main {
+  display: flex;
   flex-direction: column;
+  justify-content: start;
+  align-items: start;
   gap: 10px;
 }
 
@@ -17,5 +24,27 @@
 
   a {
     color: var(--color-blue);
+  }
+}
+
+.account__main {
+  & > button {
+    padding: 10px 40px;
+    background: red;
+    color: var(--color-white);
+    border-radius: 5px;
+  }
+}
+
+.account__newinfo {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+  div {
+    input {
+      padding: 5px;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+    }
   }
 }

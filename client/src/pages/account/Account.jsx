@@ -1,32 +1,117 @@
-import React from "react";
+import React, { useState } from "react";
 import style from "./style.module.scss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import InputMask from "react-input-mask";
+import axios from "../../utils/axios";
+import AdminsDirecting from "../../components/account/AdminsDirecting";
 
 const Account = ({ userData }) => {
+  const [group, setGroup] = useState(userData.group || "Не указано");
+  const [phone, setPhone] = useState(userData.phone || "Не указано");
+  const [birthdate, setBirthdate] = useState(
+    userData.birthdate || "Не указано"
+  );
+
+  const navigate = useNavigate();
+
+  const handleSave = async () => {
+    try {
+      const update = await axios.patch(
+        `${process.env.REACT_APP_SERVER_URL}/user/update`,
+        {
+          group,
+          phone,
+          birthdate,
+        }
+      );
+
+      if (update.status === 200) {
+        alert("Успешно!");
+      }
+    } catch (error) {
+      alert(`Произошла ошибка: ${error.response.data.message}`);
+      console.error("Ошибка загрузки файла:", error);
+    }
+  };
+
   return (
     <section className={style.account}>
       <div className="container">
+        <div className={style.account__links}>
+          {(userData.role.toLowerCase() === "организатор" ||
+            userData.role.toLowerCase() === "администратор") && (
+            <Link to="/create-directing">Создание направления</Link>
+          )}
+        </div>
+
         <div className={style.account__wrapper}>
-          <div className={style.account__links}>
-            {(userData.role.toLowerCase() === "Организатор" ||
-              userData.role.toLowerCase() === "администратор") && (
-              <Link to="/create-directing">Создание направления</Link>
+          <div className={style.account__main}>
+            <h3>
+              {userData.role.toLowerCase() === "студент"
+                ? "Студент"
+                : userData.role.toLowerCase() === "организатор"
+                ? "Организатор воспитательног отдела"
+                : userData.role.toLowerCase() === "руководитель в.о."
+                ? "руководителя воспитательного отдела"
+                : userData.role.toLowerCase() === "руководитель направления"
+                ? "Руководитель направления"
+                : "Администратор"}
+            </h3>
+
+            <p>{userData.fullName}</p>
+
+            {userData.role.toLowerCase() === "студент" && (
+              <div className={style.account__newinfo}>
+                <div>
+                  <p>Группа</p>
+                  <input
+                    type="text"
+                    placeholder="Группа"
+                    value={group}
+                    onChange={(e) => setGroup(e.target.value)}
+                  />
+                </div>
+
+                <div>
+                  <p>Номер телефона</p>
+                  <InputMask
+                    mask="+7 (999) 999-99-99"
+                    placeholder="+7 (___) ___-__-__"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                  />
+                </div>
+
+                <div>
+                  <p>Дата рождения</p>
+                  <InputMask
+                    mask="99.99.9999"
+                    placeholder="ДД.ММ.ГГГГ"
+                    value={birthdate}
+                    onChange={(e) => setBirthdate(e.target.value)}
+                  />
+                </div>
+
+                <button onClick={handleSave}>Сохранить</button>
+              </div>
             )}
+
+            <button
+              onClick={() => {
+                window.location.reload();
+                navigate("/");
+                localStorage.removeItem("token");
+              }}
+            >
+              Выйти
+            </button>
           </div>
 
-          <h3>
-            {userData.role.toLowerCase() === "студент"
-              ? "Студент"
-              : userData.role.toLowerCase() === "организатор"
-              ? "Организатор воспитательног отдела"
-              : userData.role.toLowerCase() === "руководитель в.о."
-              ? "руководителя воспитательного отдела"
-              : userData.role.toLowerCase() === "руководитель направления"
-              ? "Руководитель направления"
-              : "Администратор"}
-          </h3>
-
-          <p>{userData.fullName}</p>
+          {userData.role !== "Студент" && (
+            <React.Fragment>
+              <AdminsDirecting />
+            </React.Fragment>
+          )}
         </div>
       </div>
     </section>

@@ -5,6 +5,10 @@ import SignIn from "./pages/signin/SignIn";
 import axios from "axios";
 import Account from "./pages/account/Account";
 import CreateDirecting from "./pages/admin/CreateDirecting";
+import Register from "./pages/register/Register";
+import Main from "./pages/main/Main";
+import Directing from "./pages/directing/Directing";
+import AdminDirecting from "./pages/admin_directing/AdminDirecting";
 
 function App() {
   const [findUserProcess, setFindUserProcess] = useState(false);
@@ -43,7 +47,12 @@ function App() {
             <p>Загрузка...</p>
           ) : (
             <Routes>
+              <Route path="/" element={<Main />} />
               <Route path="/signin" element={<SignIn />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/directing/:id" element={<Directing userData={userData} />} />
+              <Route path="/admin-directing/:id" element={<AdminDirecting userData={userData} />} />
+
               {userData && (
                 <>
                   <Route
