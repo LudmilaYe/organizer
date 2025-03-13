@@ -13,10 +13,19 @@ const AdminDirecting = ({ userData }) => {
   const [description, setDescription] = useState("");
   const [secondDescription, setSecondDescription] = useState("");
   const [admins, setAdmins] = useState([]);
+  const [members, setMembers] = useState([]);
+  const [membersFull, setMembersFull] = useState([]);
 
   const [imagePath, setImagePath] = useState("");
   const [secondImagePath, setSecondImagePath] = useState("");
   const [gallery, setGallery] = useState([]);
+
+  const [applications, setApplications] = useState([]);
+
+  const [organizers, setOrganizers] = useState(null);
+  const [loadingOrganizers, setLoadingOrganizers] = useState(false);
+  const [loadingStudens, setLoadingStudens] = useState(false);
+  const [loadingMembers, setLoadingMembers] = useState(false);
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -43,20 +52,94 @@ const AdminDirecting = ({ userData }) => {
   }, [fetchDirecting]);
 
   useEffect(() => {
-    if (directing && userData && !directing.admins.includes(userData._id)) {
-      navigate("/");
-    } else if (directing) {
-      console.log(directing);
+    const getAllOrganizers = async () => {
+      try {
+        setLoadingOrganizers(true);
 
-      setName(directing.name);
-      setDescription(directing.description);
-      setSecondDescription(directing.secondDescription);
-      setAdmins(directing.admins);
-      setImagePath(directing.imagePath);
-      setSecondImagePath(directing.secondImagePath);
-      setGallery(directing.gallery);
+        const getOrganizers = await axios.get(
+          `${process.env.REACT_APP_SERVER_URL}/directing/get-organizers`
+        );
+
+        setLoadingOrganizers(false);
+        setOrganizers(getOrganizers.data);
+      } catch (error) {
+        console.log(error);
+        setLoadingOrganizers(false);
+        alert(`Произошла ошибка: ${error?.response?.data.message}`);
+      }
+    };
+
+    getAllOrganizers();
+  }, []);
+
+  console.log();
+
+  useEffect(() => {
+    if (
+      userData?.role.toLowerCase() === "администратор" ||
+      (directing && userData && directing.admins.includes(userData._id))
+    ) {
+      if (directing) {
+        setName(directing.name);
+        setDescription(directing.description);
+        setSecondDescription(directing.secondDescription);
+        setAdmins(directing.admins);
+        setImagePath(directing.imagePath);
+        setSecondImagePath(directing.secondImagePath);
+        setGallery(directing.gallery);
+      }
+    } else {
+      navigate("/");
     }
   }, [directing, userData, navigate]);
+
+  useEffect(() => {
+    const getApplicationUsers = async () => {
+      try {
+        setLoadingStudens(true);
+        const data = await axios.get(
+          `${process.env.REACT_APP_SERVER_URL}/directing/get-applications/${id}`
+        );
+        setLoadingStudens(false);
+
+        if (data.status === 200) {
+          setApplications(data.data);
+        }
+      } catch (error) {
+        setLoadingStudens(false);
+
+        console.log(error);
+        alert(`Произошла ошибка: ${error.response.data.message}`);
+      }
+    };
+
+    getApplicationUsers();
+  }, []);
+
+  useEffect(() => {
+    const getMembersUsers = async () => {
+      try {
+        setLoadingMembers(true);
+        const data = await axios.get(
+          `${process.env.REACT_APP_SERVER_URL}/directing/get-members/${id}`
+        );
+        setLoadingMembers(false);
+
+        if (data.status === 200) {
+          setMembersFull(data.data);
+        }
+      } catch (error) {
+        setLoadingMembers(false);
+
+        console.log(error);
+        alert(`Произошла ошибка: ${error.response.data.message}`);
+      }
+    };
+
+    getMembersUsers();
+  }, []);
+
+  console.log(membersFull);
 
   const updateDirecting = async () => {
     try {
@@ -71,11 +154,11 @@ const AdminDirecting = ({ userData }) => {
           imagePath,
           secondImagePath,
           gallery,
+          applications,
+          members,
         }
       );
       setSaving(false);
-
-      console.log(data);
 
       if (data.status === 200) {
         alert("Успешно обновлено!");
@@ -106,8 +189,6 @@ const AdminDirecting = ({ userData }) => {
   };
 
   const uploadGalleryImages = async (acceptedFiles) => {
-    console.log(123);
-
     const uploadedPaths = await Promise.all(
       acceptedFiles.map(async (file) => {
         const formData = new FormData();
@@ -117,9 +198,6 @@ const AdminDirecting = ({ userData }) => {
             `${process.env.REACT_APP_SERVER_URL}/upload`,
             formData
           );
-
-          console.log(response);
-
           return response.data.path;
         } catch (error) {
           console.error("Ошибка загрузки файла:", error);
@@ -132,6 +210,10 @@ const AdminDirecting = ({ userData }) => {
       ...prevGallery,
       ...uploadedPaths.filter(Boolean),
     ]);
+  };
+
+  const removeImageFromGallery = (index) => {
+    setGallery((prevGallery) => prevGallery.filter((_, i) => i !== index));
   };
 
   const onDropMain = (acceptedFiles) =>
@@ -151,7 +233,29 @@ const AdminDirecting = ({ userData }) => {
     getInputProps: getInputPropsSecond,
   } = useDropzone({ onDrop: onDropSecond });
 
-  // console.log(directing);
+  const addAdmin = (id) => {
+    setAdmins((prevAdmins) => [...prevAdmins, id]);
+  };
+
+  const removeAdmin = (id) => {
+    setAdmins((prevAdmins) => prevAdmins.filter((adminId) => adminId !== id));
+  };
+
+  const addMember = (id) => {
+    setMembers((prevMembers) => [...prevMembers, id]);
+    setApplications((prevApplications) =>
+      prevApplications.filter((application) => application._id !== id)
+    );
+    alert("Успешно добавлен! Не забудьте сохранить изменения");
+  };
+
+  const removeMember = (id) => {
+    setMembers((prevMembers) =>
+      prevMembers.filter((memberId) => memberId !== id)
+    );
+
+    alert("Успешно удален! Не забудьте сохранить изменения");
+  };
 
   return (
     <section className={style.admin_direction}>
@@ -162,7 +266,8 @@ const AdminDirecting = ({ userData }) => {
           ) : (
             directing &&
             userData &&
-            directing.admins.includes(userData._id) && (
+            (userData?.role.toLowerCase() === "администратор" ||
+              directing.admins.includes(userData._id)) && (
               <React.Fragment>
                 <form>
                   <div>
@@ -235,12 +340,8 @@ const AdminDirecting = ({ userData }) => {
 
                 <div className={style.create_direction__gallery}>
                   <p>Галерея</p>
-                  <div
-                    // {...getRootPropsGallery()}
-                    className={style.create_direction__image}
-                  >
+                  <div className={style.create_direction__image}>
                     <input id="gallery" {...getInputPropsGallery()} />
-
                     <label htmlFor="gallery">
                       <div>
                         <p>Перетащите файлы сюда или нажмите для выбора</p>
@@ -249,13 +350,127 @@ const AdminDirecting = ({ userData }) => {
                   </div>
                   <div className={style.gallery_preview}>
                     {gallery.map((image, index) => (
-                      <img
-                        key={index}
-                        src={`${process.env.REACT_APP_SERVER_URL}${image}`}
-                        alt={`Gallery ${index}`}
-                      />
+                      <div key={index} className={style.gallery_item}>
+                        <img
+                          src={`${process.env.REACT_APP_SERVER_URL}${image}`}
+                          alt={`Gallery ${index}`}
+                        />
+                        <button onClick={() => removeImageFromGallery(index)}>
+                          Удалить
+                        </button>
+                      </div>
                     ))}
                   </div>
+                </div>
+
+                <div className={style.admin_direction__people}>
+                  <div className={style.create_direction__organizers}>
+                    <p>Добавить руководителя</p>
+
+                    {loadingOrganizers ? (
+                      <p>Загрузка руководителей...</p>
+                    ) : (
+                      organizers && (
+                        <ul>
+                          {organizers.map(({ fullName, role, _id }) => (
+                            <li key={_id}>
+                              <div>
+                                <p>{role}</p>
+                                <p>{fullName}</p>
+                              </div>
+
+                              {admins.includes(_id) ? (
+                                <button
+                                  onClick={() => removeAdmin(_id)}
+                                  style={{ backgroundColor: "red" }}
+                                >
+                                  Удалить
+                                </button>
+                              ) : (
+                                <button
+                                  onClick={() => addAdmin(_id)}
+                                  style={{ backgroundColor: "#009dff" }}
+                                >
+                                  Добавить
+                                </button>
+                              )}
+                            </li>
+                          ))}
+                        </ul>
+                      )
+                    )}
+                  </div>
+
+                  <div className={style.create_direction__organizers}>
+                    <p>Входящие заявки студентов</p>
+
+                    {loadingStudens ? (
+                      <p>Загрузка студентов...</p>
+                    ) : (
+                      Array.isArray(applications) && (
+                        <ul>
+                          {applications.map(
+                            ({ fullName, role, _id, group }) => (
+                              <li key={_id}>
+                                <div>
+                                  <p>{role}</p>
+                                  <p>
+                                    {fullName}. Группа: {group}
+                                  </p>
+                                </div>
+
+                                {members.includes(_id) ? (
+                                  <button
+                                    onClick={() => removeMember(_id)}
+                                    style={{ backgroundColor: "red" }}
+                                  >
+                                    Удалить
+                                  </button>
+                                ) : (
+                                  <button
+                                    onClick={() => addMember(_id)}
+                                    style={{ backgroundColor: "#009dff" }}
+                                  >
+                                    Добавить
+                                  </button>
+                                )}
+                              </li>
+                            )
+                          )}
+                        </ul>
+                      )
+                    )}
+                  </div>
+                </div>
+
+                <div className={style.create_direction__organizers}>
+                  <p>Участники направления</p>
+
+                  {loadingStudens ? (
+                    <p>Загрузка студентов...</p>
+                  ) : (
+                    Array.isArray(membersFull) && (
+                      <ul>
+                        {membersFull.map(({ fullName, role, _id, group }) => (
+                          <li key={_id}>
+                            <div>
+                              <p>{role}</p>
+                              <p>
+                                {fullName}. Группа: {group}
+                              </p>
+                            </div>
+
+                            <button
+                              onClick={() => removeMember(_id)}
+                              style={{ backgroundColor: "red" }}
+                            >
+                              Удалить
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    )
+                  )}
                 </div>
 
                 <button onClick={updateDirecting} disabled={saving}>

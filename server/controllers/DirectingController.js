@@ -119,6 +119,8 @@ export const updateDirecting = async (req, res) => {
       secondDescription,
       secondImagePath,
       gallery,
+      applications,
+      members,
     } = req.body;
 
     if (!name || !description || admins.length < 1) {
@@ -137,6 +139,8 @@ export const updateDirecting = async (req, res) => {
         secondDescription,
         secondImagePath,
         gallery,
+        applications,
+        members,
       }
     );
 
@@ -151,6 +155,87 @@ export const updateDirecting = async (req, res) => {
     console.log(err);
     res.status(500).json({
       message: "Не удалось получить направления",
+    });
+  }
+};
+
+export const addUserToApplications = async (req, res) => {
+  try {
+    const directingId = req.params.id;
+    const userId = req.userId;
+
+    const directing = await DirectingModel.findById(directingId);
+
+    if (!directing) {
+      return res.status(404).json({
+        message: "Направление не найдено",
+      });
+    }
+
+    if (directing.applications.includes(userId)) {
+      return res.status(400).json({
+        message: "Пользователь уже добавлен в заявки",
+      });
+    }
+
+    directing.applications.push(userId);
+    await directing.save();
+
+    return res.status(200).json({
+      message: "Пользователь успешно добавлен в заявки",
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "Не удалось добавить пользователя в заявки",
+    });
+  }
+};
+
+export const getUsersFromApplications = async (req, res) => {
+  try {
+    const directingId = req.params.id;
+
+    const directing = await DirectingModel.findById(directingId).populate(
+      "applications"
+    );
+
+    if (!directing) {
+      return res.status(404).json({
+        message: "Направление не найдено",
+      });
+    }
+
+    return res.status(200).json(directing.applications);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "Не удалось получить пользователей из заявок",
+    });
+  }
+};
+
+export const getUsersFromMembers = async (req, res) => {
+  try {
+    const directingId = req.params.id;
+
+    const directing = await DirectingModel.findById(directingId).populate(
+      "members"
+    );
+
+    if (!directing) {
+      return res.status(404).json({
+        message: "Направление не найдено",
+      });
+    }
+
+    console.log(directing.members);
+
+    return res.status(200).json(directing.members);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "Не удалось получить пользователей из участников",
     });
   }
 };

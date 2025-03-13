@@ -45,6 +45,13 @@ const directiongSchema = new mongoose.Schema({
       ref: "User",
     },
   ],
+
+  applications: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
 });
 
 export default mongoose.model("Directing", directiongSchema);

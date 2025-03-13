@@ -26,6 +26,16 @@
   }
 }
 
+.gallery_item {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  button {
+    background: red !important;
+  }
+}
+
 .admin_direction__wrapper {
   display: flex;
   flex-direction: column;
@@ -95,4 +105,48 @@
     object-fit: cover;
     border-radius: 5px;
   }
+}
+
+.create_direction__organizers {
+  margin-top: 40px;
+}
+
+.create_direction__organizers {
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 20px;
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+
+      div {
+        width: 400px;
+
+        p {
+          &:first-child {
+            font-size: 12px;
+          }
+
+          &:last-child {
+            font-family: "Montserrat-md", sans-serif;
+            font-weight: 500;
+          }
+        }
+      }
+
+      button {
+        padding: 5px;
+        color: var(--color-white);
+      }
+    }
+  }
+}
+
+.admin_direction__people {
+  display: flex;
+  justify-content: space-between;
 }

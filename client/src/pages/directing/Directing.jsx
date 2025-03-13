@@ -6,6 +6,7 @@ import axios from "../../utils/axios";
 const Directing = ({ userData }) => {
   const [directing, setDirecting] = useState(null);
   const [loadingDirecting, setLoadingDirecting] = useState(false);
+
   const { id } = useParams();
 
   const fetchDirecting = useCallback(async () => {
@@ -16,7 +17,9 @@ const Directing = ({ userData }) => {
       );
       setDirecting(response.data);
     } catch (error) {
-      alert(`Произошла ошибка: ${error.response?.data?.message || error.message}`);
+      alert(
+        `Произошла ошибка: ${error.response?.data?.message || error.message}`
+      );
       console.error(error);
     } finally {
       setLoadingDirecting(false);
@@ -26,6 +29,24 @@ const Directing = ({ userData }) => {
   useEffect(() => {
     fetchDirecting();
   }, [fetchDirecting]);
+
+  const addUserToApplications = async () => {
+    try {
+      const pushUser = await axios.put(
+        `${process.env.REACT_APP_SERVER_URL}/directing/add-to-applications/${id}`
+      );
+
+      if (pushUser.status === 200) {
+        alert("Ваша заявка успешно подана, ожидайте!");
+        window.location.reload();
+      }
+    } catch (error) {
+      console.log(error);
+      alert(
+        `Произошла ошибка: ${error.response?.data?.message || error.message}`
+      );
+    }
+  };
 
   return (
     <div className={style.directing}>
@@ -47,11 +68,22 @@ const Directing = ({ userData }) => {
                     <p>{directing.description}</p>
 
                     {userData?.role === "Студент" && (
-                      <button>Записаться</button>
+                      <button
+                        onClick={addUserToApplications}
+                        disabled={directing.applications.includes(userData._id) || directing.members.includes(userData._id)}
+                      >
+                        {directing.applications.includes(userData._id)
+                          ? "Ожидание подтверждения"
+                          : directing.members.includes(userData._id)
+                          ? "Вы уже записаны"
+                          : "Записаться"}
+                      </button>
                     )}
 
                     {userData &&
-                      (["Администратор", "Организатор"].includes(userData.role) ||
+                      (["Администратор", "Организатор"].includes(
+                        userData.role
+                      ) ||
                         directing.admins.includes(userData._id)) && (
                         <Link to={`/admin-directing/${id}`}>Управлять</Link>
                       )}
