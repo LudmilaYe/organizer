@@ -106,3 +106,51 @@ export const getAdminsDirecting = async (req, res) => {
     });
   }
 };
+
+export const updateDirecting = async (req, res) => {
+  try {
+    const directingId = req.params.id;
+
+    const {
+      name,
+      description,
+      admins,
+      imagePath,
+      secondDescription,
+      secondImagePath,
+      gallery,
+    } = req.body;
+
+    if (!name || !description || admins.length < 1) {
+      return res.status(401).json({
+        message: "Заполните все необходимые поля",
+      });
+    }
+
+    const updateDirecting = await DirectingModel.findByIdAndUpdate(
+      directingId,
+      {
+        name,
+        description,
+        admins,
+        imagePath,
+        secondDescription,
+        secondImagePath,
+        gallery,
+      }
+    );
+
+    if (!updateDirecting) {
+      return res.status(401).json({
+        message: "Не удалось обновить направление!",
+      });
+    }
+
+    return res.status(200).json(updateDirecting);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "Не удалось получить направления",
+    });
+  }
+};
