@@ -7,6 +7,9 @@ const Directing = ({ userData }) => {
   const [directing, setDirecting] = useState(null);
   const [loadingDirecting, setLoadingDirecting] = useState(false);
 
+  const [admins, setAdmins] = useState([]);
+  const [adminsLoading, setAdminsLoading] = useState(false);
+
   const { id } = useParams();
 
   const fetchDirecting = useCallback(async () => {
@@ -48,6 +51,30 @@ const Directing = ({ userData }) => {
     }
   };
 
+  useEffect(() => {
+    const getAdmins = async () => {
+      try {
+        setAdminsLoading(true);
+        const response = await axios.get(
+          `${process.env.REACT_APP_SERVER_URL}/directing/get-admins/${id}`
+        );
+
+        if (response.status === 200) {
+          setAdmins(response.data);
+          setAdminsLoading(false);
+        }
+      } catch (error) {
+        setAdminsLoading(false);
+        console.log(error);
+        alert(
+          `Произошла ошибка: ${error.response?.data?.message || error.message}`
+        );
+      }
+    };
+
+    getAdmins();
+  }, []);
+
   return (
     <div className={style.directing}>
       <div className={style.directing__wrapper}>
@@ -70,7 +97,10 @@ const Directing = ({ userData }) => {
                     {userData?.role === "Студент" && (
                       <button
                         onClick={addUserToApplications}
-                        disabled={directing.applications.includes(userData._id) || directing.members.includes(userData._id)}
+                        disabled={
+                          directing.applications.includes(userData._id) ||
+                          directing.members.includes(userData._id)
+                        }
                       >
                         {directing.applications.includes(userData._id)
                           ? "Ожидание подтверждения"
@@ -103,6 +133,24 @@ const Directing = ({ userData }) => {
                       src={`${process.env.REACT_APP_SERVER_URL}${directing.secondImagePath}`}
                       alt="second image"
                     />
+                  </div>
+
+                  <div className={style.directing__admins}>
+                    <h2>Руководители направления:</h2>
+
+                    {adminsLoading
+                      ? "Загрузка..."
+                      : admins && (
+                          <ul>
+                            {admins.map((item) => (
+                              <li key={item._id}>
+                                <Link to={`/user/${item._id}`}>
+                                  <h3>{item.fullName}</h3>
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
                   </div>
                 </div>
               </div>

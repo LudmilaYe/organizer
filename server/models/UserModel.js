@@ -3,20 +3,20 @@ import mongoose from "mongoose";
 const userSchema = new mongoose.Schema({
   fullName: {
     type: String,
-    require: true,
+    required: true,
     minlength: 2,
     maxlength: 100,
   },
 
   email: {
     type: String,
-    require: true,
+    required: true,
     unique: true,
   },
 
   password: {
     type: String,
-    require: true,
+    required: true,
     minlength: 8,
   },
 
@@ -37,7 +37,7 @@ const userSchema = new mongoose.Schema({
 
   role: {
     type: "String",
-    require: true,
+    required: true,
     default: "Студент",
     enum: [
       "Студент",
@@ -58,6 +58,13 @@ const userSchema = new mongoose.Schema({
   events: [
     {
       type: mongoose.Schema.Types.ObjectId,
+    },
+  ],
+
+  applications: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Event",
     },
   ],
 });

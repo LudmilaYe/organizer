@@ -93,11 +93,23 @@ export const getDirecting = async (req, res) => {
 
 export const getAdminsDirecting = async (req, res) => {
   try {
-    const userId = req.userId;
-
-    console.log(userId);
+    const userId = req.params.id;
 
     const directing = await DirectingModel.find({ admins: userId });
+    res.status(200).json(directing);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "Не удалось получить направления",
+    });
+  }
+};
+
+export const getStudentsDirecting = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    const directing = await DirectingModel.find({ members: userId });
     res.status(200).json(directing);
   } catch (err) {
     console.log(err);
@@ -236,6 +248,29 @@ export const getUsersFromMembers = async (req, res) => {
     console.log(err);
     res.status(500).json({
       message: "Не удалось получить пользователей из участников",
+    });
+  }
+};
+
+export const getDirectingAdmins = async (req, res) => {
+  try {
+    const directingId = req.params.id;
+
+    const directing = await DirectingModel.findById(directingId)
+      .populate("admins")
+      .exec();
+
+    if (!directing) {
+      return res.status(404).json({
+        message: "Не удалось найти направление",
+      });
+    }
+
+    return res.status(200).json(directing.admins);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "Не удалось получить руководителей",
     });
   }
 };

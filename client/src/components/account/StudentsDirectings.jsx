@@ -3,7 +3,7 @@ import style from "./style.module.scss";
 import axios from "../../utils/axios";
 import { Link } from "react-router-dom";
 
-const AdminsDirecting = ({ userId }) => {
+const StudentsDirecting = ({ userId }) => {
   const [adminsDirecting, setAdminsDirecting] = useState(null);
   const [adminsDirectindLoading, setAdminsDirectindLoading] = useState(false);
 
@@ -12,7 +12,7 @@ const AdminsDirecting = ({ userId }) => {
       try {
         setAdminsDirectindLoading(true);
         const getData = await axios.get(
-          `${process.env.REACT_APP_SERVER_URL}/directing/get-admins-directing/${userId}`
+          `${process.env.REACT_APP_SERVER_URL}/directing/get-students-directing/${userId}`
         );
         setAdminsDirectindLoading(false);
 
@@ -60,4 +60,4 @@ const AdminsDirecting = ({ userId }) => {
   );
 };
 
-export default AdminsDirecting;
+export default StudentsDirecting;

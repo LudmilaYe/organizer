@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import style from "./style.module.scss";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "../../utils/axios";
 import { useDropzone } from "react-dropzone";
 
@@ -212,6 +212,15 @@ const AdminDirecting = ({ userData }) => {
     ]);
   };
 
+  // const downloadExcelData = async () => {
+  //   try {
+  //     await axios.post(`${process.env.REACT_APP_SERVER_URL}/excel-direction/${id}`);
+  //   } catch (error) {
+  //     alert(`Произошла ошибка: ${error?.response?.data.message}`);
+  //     console.error("Ошибка загрузки файла:", error);
+  //   }
+  // };
+
   const removeImageFromGallery = (index) => {
     setGallery((prevGallery) => prevGallery.filter((_, i) => i !== index));
   };
@@ -364,42 +373,47 @@ const AdminDirecting = ({ userData }) => {
                 </div>
 
                 <div className={style.admin_direction__people}>
-                  <div className={style.create_direction__organizers}>
-                    <p>Добавить руководителя</p>
+                  {(userData.role.toLowerCase() === "руководитель в.о." ||
+                    userData.role.toLowerCase() === "администратор") && (
+                    <div className={style.create_direction__organizers}>
+                      <p>Добавить руководителя</p>
 
-                    {loadingOrganizers ? (
-                      <p>Загрузка руководителей...</p>
-                    ) : (
-                      organizers && (
-                        <ul>
-                          {organizers.map(({ fullName, role, _id }) => (
-                            <li key={_id}>
-                              <div>
-                                <p>{role}</p>
-                                <p>{fullName}</p>
-                              </div>
+                      {loadingOrganizers ? (
+                        <p>Загрузка руководителей...</p>
+                      ) : (
+                        organizers && (
+                          <ul>
+                            {organizers.map(({ fullName, role, _id }) => (
+                              <li key={_id}>
+                                <div>
+                                  <Link to={`/user/${_id}`}>
+                                    <p>{role}</p>
+                                    <p>{fullName}</p>
+                                  </Link>
+                                </div>
 
-                              {admins.includes(_id) ? (
-                                <button
-                                  onClick={() => removeAdmin(_id)}
-                                  style={{ backgroundColor: "red" }}
-                                >
-                                  Удалить
-                                </button>
-                              ) : (
-                                <button
-                                  onClick={() => addAdmin(_id)}
-                                  style={{ backgroundColor: "#009dff" }}
-                                >
-                                  Добавить
-                                </button>
-                              )}
-                            </li>
-                          ))}
-                        </ul>
-                      )
-                    )}
-                  </div>
+                                {admins.includes(_id) ? (
+                                  <button
+                                    onClick={() => removeAdmin(_id)}
+                                    style={{ backgroundColor: "red" }}
+                                  >
+                                    Удалить
+                                  </button>
+                                ) : (
+                                  <button
+                                    onClick={() => addAdmin(_id)}
+                                    style={{ backgroundColor: "#009dff" }}
+                                  >
+                                    Добавить
+                                  </button>
+                                )}
+                              </li>
+                            ))}
+                          </ul>
+                        )
+                      )}
+                    </div>
+                  )}
 
                   <div className={style.create_direction__organizers}>
                     <p>Входящие заявки студентов</p>
@@ -413,10 +427,12 @@ const AdminDirecting = ({ userData }) => {
                             ({ fullName, role, _id, group }) => (
                               <li key={_id}>
                                 <div>
-                                  <p>{role}</p>
-                                  <p>
-                                    {fullName}. Группа: {group}
-                                  </p>
+                                  <Link to={`/user/${_id}`}>
+                                    <p>{role}</p>
+                                    <p>
+                                      {fullName}. Группа: {group}
+                                    </p>
+                                  </Link>
                                 </div>
 
                                 {members.includes(_id) ? (
@@ -446,18 +462,20 @@ const AdminDirecting = ({ userData }) => {
                 <div className={style.create_direction__organizers}>
                   <p>Участники направления</p>
 
-                  {loadingStudens ? (
-                    <p>Загрузка студентов...</p>
+                  {loadingMembers ? (
+                    <p>Загрузка участников...</p>
                   ) : (
                     Array.isArray(membersFull) && (
                       <ul>
                         {membersFull.map(({ fullName, role, _id, group }) => (
                           <li key={_id}>
                             <div>
-                              <p>{role}</p>
-                              <p>
-                                {fullName}. Группа: {group}
-                              </p>
+                              <Link to={`/user/${_id}`}>
+                                <p>{role}</p>
+                                <p>
+                                  {fullName}. Группа: {group}
+                                </p>
+                              </Link>
                             </div>
 
                             <button
@@ -472,6 +490,13 @@ const AdminDirecting = ({ userData }) => {
                     )
                   )}
                 </div>
+
+                <Link
+                  to={`${process.env.REACT_APP_SERVER_URL}/excel-direction/${id}`}
+                  target="_blank"
+                >
+                  Скачать Excel
+                </Link>
 
                 <button onClick={updateDirecting} disabled={saving}>
                   {saving ? "Сохранение..." : "Обновить"}

@@ -7,10 +7,15 @@ import morgan from "morgan";
 import mongoose from "mongoose";
 import userRoutes from "./routes/UserRoutes.js";
 import directingRoutes from "./routes/DirectingRoutes.js";
+import eventRoutes from "./routes/EventRoutes.js";
 import crypto from "crypto";
 import path from "path";
 import { fileURLToPath } from "url";
 import multer from "multer";
+import {
+  createExcelDirection,
+  createExcelEvent,
+} from "./controllers/ExcelGeneration.js";
 
 dotenv.config({ path: "./.env" });
 const app = express();
@@ -70,9 +75,47 @@ app.post("/upload", upload.single("image"), (req, res) => {
   }
 });
 
+/* Generate EXСEL document */
+app.get("/excel-direction/:id", async (req, res) => {
+  try {
+    const filePath = await createExcelDirection(req.params.id);
+
+    res.download(filePath, "table.xlsx", (err) => {
+      if (err) {
+        console.error("Ошибка при отправке файла:", err);
+        res.status(500).send("Ошибка при скачивании файла");
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Ошибка скачивании файла",
+    });
+  }
+});
+
+app.get("/excel-event/:id", async (req, res) => {
+  try {
+    const filePath = await createExcelEvent(req.params.id);
+
+    res.download(filePath, "table.xlsx", (err) => {
+      if (err) {
+        console.error("Ошибка при отправке файла:", err);
+        res.status(500).send("Ошибка при скачивании файла");
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Ошибка скачивании файла",
+    });
+  }
+});
+
 /* ROUTES */
 app.use("/user", userRoutes);
 app.use("/directing", directingRoutes);
+app.use("/event", eventRoutes);
 
 /* START FUNCTION */
 async function start() {

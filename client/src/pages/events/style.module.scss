@@ -1,0 +1,26 @@
+.events__wrapper {
+  margin-top: 30px;  
+
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 30px;
+    gap: 20px;
+
+    li {
+      img {
+        width: 390px;
+        height: 260px;
+        object-fit: cover;
+        border-radius: 5px;
+      }
+
+      .events__item__text {
+        background: var(--color-gray);
+        border-radius: 5px;
+        padding: 5px;
+        margin-top: 5px;
+      }
+    }
+  }
+}

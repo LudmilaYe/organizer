@@ -20,7 +20,7 @@ const Header = ({ userData }) => {
               </li>
 
               <li>
-                <Link to="/">Мероприятия</Link>
+                <Link to="/events">Мероприятия</Link>
               </li>
             </ul>
           </nav>

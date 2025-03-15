@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import Header from "./components/header/Header";
 import SignIn from "./pages/signin/SignIn";
@@ -9,6 +9,11 @@ import Register from "./pages/register/Register";
 import Main from "./pages/main/Main";
 import Directing from "./pages/directing/Directing";
 import AdminDirecting from "./pages/admin_directing/AdminDirecting";
+import UserAccount from "./pages/user_account/UserAccount";
+import CreateEvent from "./pages/admin/CreateEvent";
+import Event from "./pages/event/Event";
+import Events from "./pages/events/Events";
+import AdminEvent from "./pages/admin_event/AdminEvent";
 
 function App() {
   const [findUserProcess, setFindUserProcess] = useState(false);
@@ -50,8 +55,16 @@ function App() {
               <Route path="/" element={<Main />} />
               <Route path="/signin" element={<SignIn />} />
               <Route path="/register" element={<Register />} />
-              <Route path="/directing/:id" element={<Directing userData={userData} />} />
-              <Route path="/admin-directing/:id" element={<AdminDirecting userData={userData} />} />
+              <Route path="/user/:id" element={<UserAccount />} />
+              <Route
+                path="/directing/:id"
+                element={<Directing userData={userData} />}
+              />
+              <Route
+                path="/event/:id"
+                element={<Event userData={userData} />}
+              />
+              <Route path="/events" element={<Events />} />
 
               {userData && (
                 <>
@@ -59,13 +72,31 @@ function App() {
                     path="/account"
                     element={<Account userData={userData} />}
                   />
-
+                  <Route
+                    path="/admin-directing/:id"
+                    element={<AdminDirecting userData={userData} />}
+                  />
                   {(userData.role.toLowerCase() === "руководитель в.о." ||
                     userData.role.toLowerCase() === "администратор") && (
                     <Route
                       path="create-directing"
                       element={<CreateDirecting />}
                     />
+                  )}
+
+                  {(userData.role.toLowerCase() ===
+                    "руководитель направления" ||
+                    userData.role.toLowerCase() === "организатор" ||
+                    userData.role.toLowerCase() === "руководитель в.о." ||
+                    userData.role.toLowerCase() === "администратор") && (
+                    <React.Fragment>
+                      <Route
+                        path="create-event"
+                        element={<CreateEvent userData={userData} />}
+                      />
+
+                      <Route path="/admin-event/:id" element={<AdminEvent />} />
+                    </React.Fragment>
                   )}
                 </>
               )}

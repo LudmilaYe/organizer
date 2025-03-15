@@ -4,6 +4,9 @@ import { Link, useNavigate } from "react-router-dom";
 import InputMask from "react-input-mask";
 import axios from "../../utils/axios";
 import AdminsDirecting from "../../components/account/AdminsDirecting";
+import StudentsDirecting from "../../components/account/StudentsDirectings";
+import StudentsApplications from "../../components/account/StudentsApplications";
+import StudentsEvents from "../../components/account/StudentsEvents";
 
 const Account = ({ userData }) => {
   const [group, setGroup] = useState(userData.group || "Не указано");
@@ -38,9 +41,16 @@ const Account = ({ userData }) => {
     <section className={style.account}>
       <div className="container">
         <div className={style.account__links}>
-          {(userData.role.toLowerCase() === "организатор" ||
+          {(userData.role.toLowerCase() === "руководитель в.о." ||
             userData.role.toLowerCase() === "администратор") && (
             <Link to="/create-directing">Создание направления</Link>
+          )}
+
+          {(userData.role.toLowerCase() === "руководитель направления" ||
+            userData.role.toLowerCase() === "организатор" ||
+            userData.role.toLowerCase() === "руководитель в.о." ||
+            userData.role.toLowerCase() === "администратор") && (
+            <Link to="/create-event">Создание мероприятия</Link>
           )}
         </div>
 
@@ -60,7 +70,7 @@ const Account = ({ userData }) => {
 
             <p>{userData.fullName}</p>
 
-            {userData.role.toLowerCase() === "студент" && (
+            {userData.role.toLowerCase() === "студент" ? (
               <div className={style.account__newinfo}>
                 <div>
                   <p>Группа</p>
@@ -72,6 +82,30 @@ const Account = ({ userData }) => {
                   />
                 </div>
 
+                <div>
+                  <p>Номер телефона</p>
+                  <InputMask
+                    mask="+7 (999) 999-99-99"
+                    placeholder="+7 (___) ___-__-__"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                  />
+                </div>
+
+                <div>
+                  <p>Дата рождения</p>
+                  <InputMask
+                    mask="99.99.9999"
+                    placeholder="ДД.ММ.ГГГГ"
+                    value={birthdate}
+                    onChange={(e) => setBirthdate(e.target.value)}
+                  />
+                </div>
+
+                <button onClick={handleSave}>Сохранить</button>
+              </div>
+            ) : (
+              <div className={style.account__newinfo}>
                 <div>
                   <p>Номер телефона</p>
                   <InputMask
@@ -107,10 +141,21 @@ const Account = ({ userData }) => {
             </button>
           </div>
 
-          {userData.role !== "Студент" && (
+          {userData.role !== "Студент" ? (
             <React.Fragment>
-              <AdminsDirecting />
+              <AdminsDirecting userId={userData._id} />
             </React.Fragment>
+          ) : (
+            <div className={style.account__list}>
+              <div>
+                <StudentsDirecting userId={userData._id} />
+                <StudentsApplications
+                  userData={userData}
+                  userId={userData._id}
+                />
+              </div>
+              <StudentsEvents userData={userData} userId={userData._id} />
+            </div>
           )}
         </div>
       </div>

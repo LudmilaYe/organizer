@@ -13,6 +13,7 @@
   justify-content: start;
   align-items: start;
   gap: 10px;
+  width: 500px;
 }
 
 .account__links {
@@ -37,9 +38,9 @@
 }
 
 .account__newinfo {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 
   div {
     input {
@@ -47,4 +48,9 @@
       border: 1px solid rgba(0, 0, 0, 0.2);
     }
   }
+}
+
+.account__list {
+  display: flex;
+  gap: 20px;
 }
