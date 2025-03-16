@@ -123,7 +123,7 @@ const Event = ({ userData }) => {
                         Время проведения: {event.start} - {event.finish}
                       </p>
 
-                      <div className={style.event__members}>
+                      {/* <div className={style.event__members}>
                         <h2>Участники:</h2>
 
                         {loadingMembers
@@ -140,7 +140,7 @@ const Event = ({ userData }) => {
                                 ))}
                               </ul>
                             )}
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 </div>
