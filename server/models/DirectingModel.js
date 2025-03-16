@@ -52,6 +52,12 @@ const directiongSchema = new mongoose.Schema({
       ref: "User",
     },
   ],
+
+  skills: [
+    {
+      type: String,
+    },
+  ],
 });
 
 export default mongoose.model("Directing", directiongSchema);

@@ -13,7 +13,7 @@
   justify-content: start;
   align-items: start;
   gap: 10px;
-  width: 500px;
+  width: 50%;
 }
 
 .account__links {
@@ -34,6 +34,7 @@
     background: red;
     color: var(--color-white);
     border-radius: 5px;
+    margin-top: 50px;
   }
 }
 
@@ -47,6 +48,13 @@
       padding: 5px;
       border: 1px solid rgba(0, 0, 0, 0.2);
     }
+  }
+
+  & > button {
+    padding: 5px;
+    background: var(--color-blue);
+    color: var(--color-white);
+    border-radius: 5px;
   }
 }
 

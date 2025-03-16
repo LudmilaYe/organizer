@@ -33,6 +33,8 @@
 
   button {
     background: red !important;
+    padding: 5px;
+    color: var(--color-white);
   }
 }
 
@@ -41,7 +43,7 @@
   flex-direction: column;
   gap: 10px;
 
-  button {
+  & > button {
     margin-top: 60px;
     padding: 10px;
     color: var(--color-white);
@@ -128,6 +130,8 @@
       display: flex;
       align-items: center;
       gap: 20px;
+      padding: 5px;
+      box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2);
 
       div {
         width: 400px;
@@ -145,7 +149,9 @@
       }
 
       button {
-        padding: 5px;
+        padding: 5px 20px;
+        width: 150px;
+        text-align: center;
         color: var(--color-white);
       }
     }
@@ -155,4 +161,50 @@
 .admin_direction__people {
   display: flex;
   justify-content: space-between;
+}
+
+.skills {
+  margin-top: 50px;
+
+  ul {
+    margin-bottom: 10px;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    li {
+      display: flex;
+      justify-content: space-between;
+      padding: 5px;
+      box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.1);
+      border-radius: 3px;
+
+      p {
+        width: 50%;
+      }
+
+      button {
+        padding: 5px 20px;
+        background: red;
+        color: var(--color-white);
+      }
+    }
+  }
+
+  input {
+    width: 80%;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    border-radius: 5px;
+  }
+
+  & > button {
+    width: 18%;
+    margin-left: 10px;
+    padding: 9px;
+    background: var(--color-blue);
+    color: var(--color-white);
+    border-radius: 5px;
+  }
 }

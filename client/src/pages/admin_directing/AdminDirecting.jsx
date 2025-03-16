@@ -21,6 +21,8 @@ const AdminDirecting = ({ userData }) => {
   const [gallery, setGallery] = useState([]);
 
   const [applications, setApplications] = useState([]);
+  const [skills, setSkills] = useState([]);
+  const [newSkill, setNewSkill] = useState("");
 
   const [organizers, setOrganizers] = useState(null);
   const [loadingOrganizers, setLoadingOrganizers] = useState(false);
@@ -72,8 +74,6 @@ const AdminDirecting = ({ userData }) => {
     getAllOrganizers();
   }, []);
 
-  console.log();
-
   useEffect(() => {
     if (
       userData?.role.toLowerCase() === "администратор" ||
@@ -87,6 +87,7 @@ const AdminDirecting = ({ userData }) => {
         setImagePath(directing.imagePath);
         setSecondImagePath(directing.secondImagePath);
         setGallery(directing.gallery);
+        setSkills(directing.skills);
       }
     } else {
       navigate("/");
@@ -156,6 +157,7 @@ const AdminDirecting = ({ userData }) => {
           gallery,
           applications,
           members,
+          skills,
         }
       );
       setSaving(false);
@@ -266,6 +268,17 @@ const AdminDirecting = ({ userData }) => {
     alert("Успешно удален! Не забудьте сохранить изменения");
   };
 
+  const addSkill = () => {
+    if (newSkill.trim() !== "") {
+      setSkills((prevSkills) => [...prevSkills, newSkill.trim()]);
+      setNewSkill("");
+    }
+  };
+
+  const removeSkill = (index) => {
+    setSkills((prevSkills) => prevSkills.filter((_, i) => i !== index));
+  };
+
   return (
     <section className={style.admin_direction}>
       <div className="container">
@@ -370,6 +383,27 @@ const AdminDirecting = ({ userData }) => {
                       </div>
                     ))}
                   </div>
+                </div>
+
+                <div className={style.skills}>
+                  <h3>Навыки</h3>
+                  <ul>
+                    {skills.map((item, index) => (
+                      <li key={index}>
+                        <p>{item}</p>
+                        <button onClick={() => removeSkill(index)}>
+                          Удалить
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                  <input
+                    type="text"
+                    value={newSkill}
+                    onChange={(event) => setNewSkill(event.target.value)}
+                    placeholder="Добавить новый навык"
+                  />
+                  <button onClick={addSkill}>Добавить навык</button>
                 </div>
 
                 <div className={style.admin_direction__people}>

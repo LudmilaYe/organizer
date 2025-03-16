@@ -152,6 +152,16 @@ const Directing = ({ userData }) => {
                           </ul>
                         )}
                   </div>
+
+                  <div className={style.directing__skills}>
+                    <h3>Навыки:</h3>
+
+                    <ol>
+                      {directing.skills.map((item, index) => (
+                        <li key={index}>{item}</li>
+                      ))}
+                    </ol>
+                  </div>
                 </div>
               </div>
 

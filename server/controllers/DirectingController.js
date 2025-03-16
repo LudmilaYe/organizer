@@ -133,6 +133,7 @@ export const updateDirecting = async (req, res) => {
       gallery,
       applications,
       members,
+      skills,
     } = req.body;
 
     if (!name || !description || admins.length < 1) {
@@ -153,6 +154,7 @@ export const updateDirecting = async (req, res) => {
         gallery,
         applications,
         members,
+        skills,
       }
     );
 

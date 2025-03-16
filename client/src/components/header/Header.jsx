@@ -2,6 +2,7 @@ import React from "react";
 import style from "./style.module.scss";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
+import user from "../../assets/user.svg";
 
 const Header = ({ userData }) => {
   return (
@@ -10,7 +11,7 @@ const Header = ({ userData }) => {
         <div className={style.header__wrapper}>
           <Link to="/">
             <img src={logo} alt="logo" />
-            ИАТ
+            внеучебная деятельность ИАТ
           </Link>
 
           <nav>
@@ -29,7 +30,9 @@ const Header = ({ userData }) => {
             <Link to="/signin">Войти</Link>
           ) : (
             <div className={style.header__user}>
-              <Link to="/account">{userData.fullName}</Link>
+              <Link to="/account">
+                <img src={user} alt="user" /> {userData.fullName}
+              </Link>
             </div>
           )}
         </div>
