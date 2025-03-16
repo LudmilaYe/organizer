@@ -9,6 +9,7 @@
   height: 600px;
   position: relative;
   color: var(--color-white);
+  width: 100%;
   transform-style: preserve-3d;
 
   display: flex;
@@ -48,9 +49,15 @@
 .head__wrapper {
   display: flex;
   flex-direction: column;
-  justify-content: start;
-  align-items: start;
+  width: 85vw;
   gap: 10px;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Изменено с 'start' на 'flex-start' */
+    align-items: flex-start; /* Изменено с 'start' на 'flex-start' */
+  }
 
   position: relative;
   z-index: 2;
@@ -65,17 +72,17 @@
 
   button,
   a {
+    display: block;
     padding: 15px 60px;
     background: var(--color-blue);
     border-radius: 5px;
-    margin-top: 20px;
+    margin-top: 40px;
   }
 }
 
 .directing__about__wrapper {
   display: flex;
   justify-content: space-between;
-  align-items: center;
   gap: 40px;
   margin-top: 40px;
 

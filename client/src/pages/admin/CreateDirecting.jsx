@@ -13,6 +13,8 @@ const CreateDirecting = () => {
   const [name, setName] = useState("");
   const [firstDescription, setFirstDescription] = useState("");
   const [secondDescription, setSecondDescription] = useState("");
+  const [skills, setSkills] = useState([]);
+  const [newSkill, setNewSkill] = useState("");
 
   const navigate = useNavigate();
 
@@ -48,6 +50,7 @@ const CreateDirecting = () => {
           admins: admins,
           imagePath: mainImagePath,
           secondImagePath: secondImagePath,
+          skills: skills,
         }
       );
 
@@ -96,6 +99,17 @@ const CreateDirecting = () => {
 
   const removeAdmin = (id) => {
     setAdmins((prevAdmins) => prevAdmins.filter((adminId) => adminId !== id));
+  };
+
+  const addSkill = () => {
+    if (newSkill.trim() !== "") {
+      setSkills((prevSkills) => [...prevSkills, newSkill.trim()]);
+      setNewSkill("");
+    }
+  };
+
+  const removeSkill = (index) => {
+    setSkills((prevSkills) => prevSkills.filter((_, i) => i !== index));
   };
 
   return (
@@ -158,6 +172,25 @@ const CreateDirecting = () => {
                 </div>
               </label>
             </div>
+          </div>
+
+          <div className={style.skills}>
+            <h3>Навыки</h3>
+            <ul>
+              {skills.map((item, index) => (
+                <li key={index}>
+                  <p>{item}</p>
+                  <button onClick={() => removeSkill(index)}>Удалить</button>
+                </li>
+              ))}
+            </ul>
+            <input
+              type="text"
+              value={newSkill}
+              onChange={(event) => setNewSkill(event.target.value)}
+              placeholder="Добавить новый навык"
+            />
+            <button onClick={addSkill}>Добавить навык</button>
           </div>
 
           <div className={style.create_direction__organizers}>

@@ -10,6 +10,7 @@ export const createDirecting = async (req, res) => {
       imagePath,
       secondDescription,
       secondImagePath,
+      skills,
     } = req.body;
 
     if (!name || !description || admins.length < 1) {
@@ -25,6 +26,7 @@ export const createDirecting = async (req, res) => {
       imagePath,
       secondDescription,
       secondImagePath,
+      skills,
     });
 
     const directing = await doc.save();

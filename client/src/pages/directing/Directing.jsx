@@ -91,32 +91,34 @@ const Directing = ({ userData }) => {
               >
                 <div className="container">
                   <div className={style.head__wrapper}>
-                    <h2>{directing.name}</h2>
-                    <p>{directing.description}</p>
+                    <div>
+                      <h2>{directing.name}</h2>
+                      <p>{directing.description}</p>
 
-                    {userData?.role === "Студент" && (
-                      <button
-                        onClick={addUserToApplications}
-                        disabled={
-                          directing.applications.includes(userData._id) ||
-                          directing.members.includes(userData._id)
-                        }
-                      >
-                        {directing.applications.includes(userData._id)
-                          ? "Ожидание подтверждения"
-                          : directing.members.includes(userData._id)
-                          ? "Вы уже записаны"
-                          : "Записаться"}
-                      </button>
-                    )}
-
-                    {userData &&
-                      (["Администратор", "Организатор"].includes(
-                        userData.role
-                      ) ||
-                        directing.admins.includes(userData._id)) && (
-                        <Link to={`/admin-directing/${id}`}>Управлять</Link>
+                      {userData?.role === "Студент" && (
+                        <button
+                          onClick={addUserToApplications}
+                          disabled={
+                            directing.applications.includes(userData._id) ||
+                            directing.members.includes(userData._id)
+                          }
+                        >
+                          {directing.applications.includes(userData._id)
+                            ? "Ожидание подтверждения"
+                            : directing.members.includes(userData._id)
+                            ? "Вы уже записаны"
+                            : "Записаться"}
+                        </button>
                       )}
+
+                      {userData &&
+                        (["Администратор", "Организатор"].includes(
+                          userData.role
+                        ) ||
+                          directing.admins.includes(userData._id)) && (
+                          <Link to={`/admin-directing/${id}`}>Управлять</Link>
+                        )}
+                    </div>
                   </div>
                 </div>
               </div>

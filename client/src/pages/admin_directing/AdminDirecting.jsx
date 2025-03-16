@@ -140,8 +140,6 @@ const AdminDirecting = ({ userData }) => {
     getMembersUsers();
   }, []);
 
-  console.log(membersFull);
-
   const updateDirecting = async () => {
     try {
       setSaving(true);
