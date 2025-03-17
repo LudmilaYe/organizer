@@ -11,7 +11,7 @@ const Header = ({ userData }) => {
         <div className={style.header__wrapper}>
           <Link to="/">
             <img src={logo} alt="logo" />
-            Внеучебная деятельность ИАТ
+            dнеучебная деятельность ИАТ
           </Link>
 
           <nav>
